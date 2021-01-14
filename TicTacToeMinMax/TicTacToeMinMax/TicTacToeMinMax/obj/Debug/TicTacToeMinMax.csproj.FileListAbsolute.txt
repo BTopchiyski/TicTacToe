@@ -1,0 +1,11 @@
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.csprojAssemblyReference.cache
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.Properties.Resources.resources
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.csproj.GenerateResource.cache
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.csproj.CoreCompileInputs.cache
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\bin\Debug\TicTacToeMinMax.exe.config
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\bin\Debug\TicTacToeMinMax.exe
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\bin\Debug\TicTacToeMinMax.pdb
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.exe
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.pdb
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.GameField.resources
+E:\University\САА\Tic-tac-toe-MinMax\TicTacToeMinMax\TicTacToeMinMax\TicTacToeMinMax\obj\Debug\TicTacToeMinMax.TreeField.resources
