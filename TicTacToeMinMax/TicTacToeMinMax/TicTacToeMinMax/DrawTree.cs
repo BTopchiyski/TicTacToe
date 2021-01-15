@@ -40,7 +40,7 @@ namespace TicTacToeMinMax
             LevelInfo.AddLast(node0);
 
             int Layer = 1;
-            GetLevelInformation(LevelInfo, node0, node.Children.Count + 1, Layer); // Adds the other nodes into the List. Now we can draw them.
+            GetLevelInformation(LevelInfo, node0, node.Children.Count + 1, Layer, TreeMethod); // Adds the other nodes into the List. Now we can draw them.
 
             // Getting figure size, initiazing pens\\
             int elementsInSector = ListMaxCount(LevelInfo); // Max elements in a sector
@@ -86,7 +86,7 @@ namespace TicTacToeMinMax
             }
 
             //The figures and their elements have been drawn. Now we have the information needed to build the arrows;
-            BuildArrows(LevelInfo, graphics, Pens[3]);
+            BuildArrows(LevelInfo, graphics, Pens[3], TreeMethod);
 
             
             MainNodePen.Dispose();
@@ -98,7 +98,8 @@ namespace TicTacToeMinMax
             LinkedList<List<Node>> nodeInfo,
             List<Node> node,
             int ChildrenCount,
-            int layer)
+            int layer,
+            string TreeMethod)
         {
             for (int i = layer; i < ChildrenCount; i++)
             {
@@ -113,9 +114,76 @@ namespace TicTacToeMinMax
                 }
                 nodeInfo.AddLast(currentChildren); // Adds next list to our LinkedList
 
+                if(TreeMethod == "AlphaBeta")
+                {
+                    AlphaBeta methodAB = new AlphaBeta();
+                    methodAB.totalChildrenAtLayer = 1;
+                    methodAB.willBeDrawn = true;
+                    methodAB.yPosition = 1;
+                    methodAB.isEndNode = false;
+                    nodeInfo.ElementAt(0).ElementAt(0).MethodAB = methodAB; //Adds information to initial node
+
+                    int alpha = -2;
+                    int beta = 2;
+
+                   List<Node> fathers = nodeInfo.ElementAt(nodeInfo.Count - 2);
+
+                    foreach (Node f in fathers) {
+
+                        for (int z = 0; z < currentChildren.Count; z++) // Gets alpha and beta of currentLayer
+                        {
+                            if (f.Children.Contains(currentChildren[z]) && f.MethodAB.willBeDrawn == true && f.MethodAB.isEndNode == false) //will not evaluate alpha beta for children with no father from previous layer
+                            {
+
+                                if (alpha < currentChildren[z].Value)
+                                {
+                                    alpha = (int)currentChildren[z].Value;
+                                }
+                                if (beta > currentChildren[z].Value)
+                                {
+                                    beta = (int)currentChildren[z].Value;
+                                }
+
+                                AlphaBeta currentMethodAB = new AlphaBeta();
+                                currentMethodAB.totalChildrenAtLayer = currentChildren.Count;
+                                currentMethodAB.willBeDrawn = true; //Every node will be drawn if the father was drawn aswell
+                                currentMethodAB.yPosition = z;
+                                currentMethodAB.isEndNode = true; //It is an end node untill proven otherwise
+
+                                currentChildren[z].MethodAB = currentMethodAB;
+                            }
+                            else
+                            {
+                                AlphaBeta currentMethodAB = new AlphaBeta();
+                                //currentMethodAB.totalChildrenAtLayer = currentChildren.Count;
+                                //currentMethodAB.willBeDrawn = false; 
+                                //currentMethodAB.yPosition = z;
+                                //currentMethodAB.isEndNode = true; 
+
+                                if(currentChildren[z].MethodAB == null)
+                                currentChildren[z].MethodAB = currentMethodAB;
+                            }
+                        }
+                    }
+
+                    bool MainTreeBranch = true; //We get only 1 main branch
+                    for(int z = 0; z < currentChildren.Count; z++) // Determines which node continues/ which is and end node
+                    {
+                        if(currentChildren[z].MethodAB.willBeDrawn == true && MainTreeBranch || currentChildren[z].Value == 1 && MainTreeBranch)
+                        {
+                            if (currentChildren[z].Value == alpha)
+                            {
+                                MainTreeBranch = false;
+                                currentChildren[z].MethodAB.isEndNode = false; // Will be drawn and continue the tree
+                            }
+                        }
+                    }
+
+                }
+
                 if (layer <= ChildrenCount) //Creates desired ammount of lists for layering
                 {
-                    GetLevelInformation(nodeInfo, currentChildren, ChildrenCount, layer + 1);
+                    GetLevelInformation(nodeInfo, currentChildren, ChildrenCount, layer + 1, TreeMethod);
 
                     i = ChildrenCount; // Recursion has ended;
                 }
@@ -186,6 +254,13 @@ namespace TicTacToeMinMax
             else if( TreeMethod == "MinMaxValue")
             {
                 graphics.DrawEllipse(Pens[WhichPen], point.X, point.Y, figureSize, figureSize);
+            }
+            else if (TreeMethod == "AlphaBeta")
+            {
+                if (node.MethodAB.willBeDrawn == true)
+                {
+                    graphics.DrawEllipse(Pens[WhichPen], point.X, point.Y, figureSize, figureSize);
+                }
             }
 
 
@@ -264,12 +339,31 @@ namespace TicTacToeMinMax
                 graphics.DrawString(Val, myFont, WhichBrush, TextLocation);
 
             }
+            else if (TreeMethod == "AlphaBeta")
+            {
+                if (node.MethodAB.willBeDrawn == true)
+                {
+                    string Val = node.Value.ToString();
+                    Font myFont = new Font("Calibri", figureSize / 5);
+
+                    Point TextLocation = new Point(
+                        point.X + figureSize / 2 - figureSize / 5,
+                        point.Y + figureSize / 2 - figureSize / 5);
+
+                    SolidBrush WhichBrush = new SolidBrush(Color.White);
+                    WhichBrush.Color = Pens[WhichPen].Color;
+
+                    graphics.DrawString(Val, myFont, WhichBrush, TextLocation);
+                }
+
+            }
         }
 
         public void BuildArrows(
             LinkedList<List<Node>> LevelInfo,
             Graphics graphics,
-            Pen pen)
+            Pen pen,
+            string TreeMethod)
         {
             AdjustableArrowCap CustomArrow = new AdjustableArrowCap(4, 4);
             pen.CustomEndCap = CustomArrow;
@@ -294,7 +388,15 @@ namespace TicTacToeMinMax
                     {
                         if(BranchBeginning.ElementAt(j).Children.Contains(BranchEnding.ElementAt(z))) // If the father has a son
                         {
-                            graphics.DrawLine(pen, BranchBeginning.ElementAt(j).DrawnLocationEnd, BranchEnding.ElementAt(z).DrawnLocationBeginning);
+                            if (TreeMethod == "AlphaBeta")
+                            {
+                                if(BranchBeginning.ElementAt(j).MethodAB.isEndNode == false && BranchEnding.ElementAt(z).MethodAB.willBeDrawn == true)
+                                graphics.DrawLine(pen, BranchBeginning.ElementAt(j).DrawnLocationEnd, BranchEnding.ElementAt(z).DrawnLocationBeginning);
+                            }
+                            else
+                            {
+                                graphics.DrawLine(pen, BranchBeginning.ElementAt(j).DrawnLocationEnd, BranchEnding.ElementAt(z).DrawnLocationBeginning);
+                            }
                         }
                     }
                 }

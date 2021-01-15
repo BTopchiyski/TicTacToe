@@ -19,5 +19,7 @@ namespace TicTacToeMinMax
 
 		public Point DrawnLocationBeginning { get; set; } // Will be the beginning point of a arrow => the middle right location of a drawn figure.
 		public Point DrawnLocationEnd { get; set; }
+
+		public AlphaBeta MethodAB { get; set; }
 	}
 }

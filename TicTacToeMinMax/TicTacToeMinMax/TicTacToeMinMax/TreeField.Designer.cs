@@ -63,7 +63,8 @@ namespace TicTacToeMinMax
             this.TreeBox.FormattingEnabled = true;
             this.TreeBox.Items.AddRange(new object[] {
             "MinMaxGrid",
-            "MinMaxValue"});
+            "MinMaxValue",
+            "AlphaBeta"});
             this.TreeBox.Location = new System.Drawing.Point(43, 162);
             this.TreeBox.Name = "TreeBox";
             this.TreeBox.Size = new System.Drawing.Size(121, 21);
